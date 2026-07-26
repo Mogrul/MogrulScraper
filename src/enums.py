@@ -20,3 +20,8 @@ class EventDownloadType(Enum):
     ADD = "download_add"
     PROGRESS = "download_progress"
     COMPLETE = "download_complete"
+
+class PornDBCategory(Enum):
+    JAV = "jav"
+    MOVIES = "movies"
+    SCENES = "scenes"

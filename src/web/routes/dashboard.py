@@ -8,22 +8,59 @@ from enum import Enum
 from flask import Blueprint, Response
 
 from models import EventDownload, EventTerminal
+from shared import Config
 
 clients = []
 clients_lock = threading.Lock()
 
+terminal_events: list[dict] = []
+terminal_events_lock = threading.Lock()
+
 dashboard = Blueprint("dashboard", __name__)
 
+def event_to_dict(event: EventDownload | EventTerminal) -> dict:
+    event_dict = asdict(event)
+
+    if isinstance(event_dict.get("type"), Enum):
+        event_dict["type"] = event_dict["type"].value
+
+    return event_dict
+
 def send_client(event: EventDownload | EventTerminal):
+    event_dict = event_to_dict(event)
+
+    if event.type == "terminal":
+        with terminal_events_lock:
+            terminal_events.append(event_dict)
+
     with clients_lock:
         current_clients = list(clients)
 
     for client in current_clients:
-        event_dict = asdict(event)
-        if isinstance(event_dict.get("type"), Enum):
-            event_dict["type"] = event_dict["type"].value
-
         client.put(event_dict)
+
+def send_terminal(message: str):
+    config = Config()
+
+    if config.web_client:
+        event = EventTerminal(message)
+        send_client(event)
+
+def handle_initial() -> list[dict]:
+    from session import Session
+    initial_events = []
+
+    # Existing downloads
+    session = Session()
+
+    for download in session.get_download_events():
+        initial_events.append(event_to_dict(download))
+
+    # Previous terminal events
+    with terminal_events_lock:
+        initial_events.extend(terminal_events)
+
+    return initial_events
 
 @dashboard.route("/events")
 def events():
@@ -31,6 +68,10 @@ def events():
 
     with clients_lock:
         clients.append(client_queue)
+
+    # Send initial data
+    for event in handle_initial():
+        client_queue.put(event)
 
     def generate():
         try:
@@ -84,7 +125,10 @@ def start():
         send_client(EventTerminal("Scraper already started."))
 
     else:
-        scraper.start()
         send_client(EventTerminal("Scraper started."))
+        try:
+            scraper.start()
+        except Exception as e:
+            logger.error(e)
 
     return "", 204

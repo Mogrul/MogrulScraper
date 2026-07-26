@@ -1,3 +1,5 @@
+import logging
+
 from flask import Blueprint, request, request, flash, render_template
 
 from shared import Config
@@ -14,7 +16,9 @@ def render_config():
 
 @config.route("/config", methods = ["POST"])
 def receive_config():
-    urls = request.form.get("url", "")
+    logger = logging.getLogger("Web-Client.Config")
+
+    urls = request.form.get("urls", "")
     chunk_size = request.form.get("chunk_size", type = int)
     disabled_domains = request.form.getlist("disabled_domains")
     concurrent = request.form.get("concurrent", type = int)
@@ -35,6 +39,8 @@ def receive_config():
 
     if timeout:
         config_data.timeout = timeout
+
+    logger.info(f"Config Changed to: {config_data.__dict__}")
 
     flash(
         "Configuration saved successfully.",

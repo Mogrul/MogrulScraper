@@ -47,6 +47,18 @@ events.onmessage = (event) => {
     }
 };
 
+events.onerror = (event) => {
+    resetDownloads();
+
+    if (events.readyState === EventSource.CONNECTING) {
+        console.log("Reconnecting...");
+    }
+
+    else if (events.readyState === EventSource.CLOSED) {
+        console.error("SSE connection closed.");
+    }
+}
+
 const downloads = document.getElementById(
     "downloads"
 );
@@ -75,6 +87,14 @@ const clearTerminalButton = document.getElementById(
     "clear-terminal"
 );
 
+
+function resetDownloads() {
+    document
+        .querySelectorAll(".download-item")
+        .forEach(download => {
+            download.remove();
+        });
+}
 
 function updateDownloadCount() {
     const count = downloads.querySelectorAll(

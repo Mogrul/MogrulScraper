@@ -7,19 +7,19 @@ import os
 
 
 class ConsoleFormatter(logging.Formatter):
-    TIME = "\x1b[1;90m"
-    LEVEL = "\x1b[34m"
-    NAME = "\x1b[35m"
-    THREAD = "\x1b[36m"
-    RED = "\x1b[31m"
-    BOLD_WHITE = "\x1b[1;37m"
+    TIME = "\x1b[38;5;245m"  # Dim grey
+    LEVEL = "\x1b[1;36m"  # Bold cyan
+    NAME = "\x1b[1;35m"  # Bold magenta
+    THREAD = "\x1b[38;5;109m"  # Muted blue/cyan
+
+    RED = "\x1b[1;31m"  # Bold red
+    BOLD_WHITE = "\x1b[1;37m"  # Bright white
     RESET = "\x1b[0m"
 
     def format(self, record: logging.LogRecord) -> str:
         time = self.formatTime(record, "%Y-%m-%d %H:%M:%S")
         level = record.levelname
         name = record.name
-        thread = record.threadName.upper() if record.threadName else ""
         msg = record.getMessage()
 
         # Handle indentation for msg
@@ -27,9 +27,8 @@ class ConsoleFormatter(logging.Formatter):
 
         time_str = f"{self.TIME}{time}{self.RESET}"
         level_str = f"{self.LEVEL}{level:<8}{self.RESET}"
-        name_str = f"{self.NAME}{name.upper():<30}{self.RESET}"
-        thread_str = f"{self.NAME}{thread}{self.RESET}"
-        end_str = f" {self.RED}>>{self.RESET}"
+        name_str = f"{self.NAME}{name.upper():<20}{self.RESET}"
+        end_str = f" {self.TIME}>>{self.RESET}"
         msg_str = re.sub(
             r"\*(.*?)\*",
             lambda m: f"{self.BOLD_WHITE}{m.group(1)}{self.RESET}",
@@ -37,7 +36,7 @@ class ConsoleFormatter(logging.Formatter):
         )
 
         return (
-            f"{time_str} {level_str} {name_str} {thread_str} {end_str}\n"
+            f"{time_str} {level_str} {name_str} {end_str}\n"
             f"      {msg_str}"
         )
 

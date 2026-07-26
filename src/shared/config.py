@@ -1,4 +1,5 @@
 import argparse
+from pathlib import Path
 
 from .singleton import SingletonMeta
 
@@ -14,13 +15,15 @@ class Config(metaclass = SingletonMeta):
         self.chunk_size: int = _args.chunk_size
         self.concurrent: int = _args.concurrent
         self.timeout: int = _args.timeout
+        self.porndb_token: str | None = _args.porndb_token
+        self.download_path = Path(_args.download_path)
 
     def _parse_args(self) -> argparse.Namespace:
         parser = argparse.ArgumentParser()
 
         parser.add_argument(
             "urls",
-            nargs = "+",
+            nargs = "*",
             metavar = "URL",
             help = "URLs to scrape",
         )
@@ -63,7 +66,7 @@ class Config(metaclass = SingletonMeta):
         parser.add_argument(
             "--concurrent",
             type = int,
-            default = 1,
+            default = 10,
             help = "Number of concurrent downloads",
         )
 
@@ -72,6 +75,20 @@ class Config(metaclass = SingletonMeta):
             type = int,
             default = 10,
             help = "Timeout in seconds",
+        )
+
+        parser.add_argument(
+            "--porndb-token",
+            type = str,
+            default = None,
+            help = "PornDB token",
+        )
+
+        parser.add_argument(
+            "--download-path",
+            type = str,
+            default = "Downloads",
+            help = "Path to download directory",
         )
 
         return parser.parse_args()

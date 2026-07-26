@@ -7,8 +7,9 @@ from bs4 import BeautifulSoup
 from requests.adapters import HTTPAdapter
 
 from enums import RequestType, Status, ResponseType, EventDownloadType
-from models import Request, Response, Download, DownloadRequest, EventDownload
+from models import Request, Response, Download, DownloadRequest, EventDownload, EventTerminal
 from shared import SingletonMeta, Config
+from shared.util import format_duration, format_bytes
 
 
 class Session(metaclass = SingletonMeta):
@@ -66,6 +67,8 @@ class Session(metaclass = SingletonMeta):
                 params = request.params,
                 json = request.json,
             )
+
+        self._logger.debug(f"{r.status_code:<10} {r.url}")
 
         if r.status_code != 200:
             return Response(
@@ -127,6 +130,10 @@ class Session(metaclass = SingletonMeta):
         headers = request.headers
         destination = request.destination
 
+        if destination.exists():
+            self._logger.info(f"{request.destination} already exists, skipping...")
+            return
+
         # Get current downloaded bytes if need to resume
         temp_path = destination.with_suffix(destination.suffix + ".tmp")
         downloaded_bytes = 0
@@ -173,58 +180,81 @@ class Session(metaclass = SingletonMeta):
 
         time_taken = time.perf_counter() - start_time
 
-    def _update_progress(self, download: Download, progress: int) -> bool:
-        if self._downloads[download.id].progress == progress:
-            return False
+        from web.routes import send_client
+        message = f"{format_duration(time_taken):^10}{format_bytes(downloaded_bytes):^10} Downloaded {destination}"
+        send_client(EventTerminal(message))
+        self._logger.info(message)
 
-        # Send to web client
-        if self._config.web_client:
-            from web.routes import send_client
-            event = EventDownload(
-                type = EventDownloadType.PROGRESS,
-                id = download.id,
-                name = download.name,
-                progress = progress,
-            )
-            send_client(event)
+    def get_download_events(self) -> list[EventDownload]:
+        download_events = []
 
-        self._downloads[download.id].progress = progress
-        return True
-
-    def _add_download(self, download: Download) -> bool:
-        if self._downloads[download.id]:
-            return False
-
-        # Send to web client
-        if self._config.web_client:
-            from web.routes import send_client
-            event = EventDownload(
+        for download in self._downloads.values():
+            download_events.append(EventDownload(
                 type = EventDownloadType.ADD,
                 id = download.id,
                 name = download.name,
                 progress = download.progress,
-            )
-            send_client(event)
+            ))
+
+        return download_events
+
+    def _update_progress(self, download: Download, progress: int) -> bool:
+        current_download = self._downloads.get(download.id)
+
+        if current_download is None:
+            return False
+
+        if current_download.progress == progress:
+            return False
+
+        current_download.progress = progress
+
+        if self._config.web_client:
+            from web.routes import send_client
+
+            send_client(EventDownload(
+                type = EventDownloadType.PROGRESS,
+                id = download.id,
+                name = download.name,
+                progress = progress,
+            ))
+
+        return True
+
+    def _add_download(self, download: Download) -> bool:
+        if download.id in self._downloads:
+            return False
+
+        if self._config.web_client:
+            from web.routes import send_client
+
+            send_client(EventDownload(
+                type = EventDownloadType.ADD,
+                id = download.id,
+                name = download.name,
+                progress = download.progress,
+            ))
 
         self._downloads[download.id] = download
         return True
 
     def _remove_download(self, download: Download) -> bool:
-        # Remove download
-        deleted = self._downloads.pop(download.id)
+        deleted = self._downloads.pop(download.id, None)
 
-        # Send to client
+        if deleted is None:
+            return False
+
         if self._config.web_client:
             from web.routes import send_client
-            event = EventDownload(
+
+            send_client(EventDownload(
                 type = EventDownloadType.COMPLETE,
                 id = download.id,
                 name = download.name,
                 progress = download.progress,
-            )
-            send_client(event)
+            ))
 
-        return True if deleted else False
+        return True
 
     def _get_percentage(self, downloaded_bytes: int, total_bytes: int) -> int:
         return (
