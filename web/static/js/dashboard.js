@@ -87,6 +87,14 @@ const clearTerminalButton = document.getElementById(
     "clear-terminal"
 );
 
+const logoIcon = document.getElementById(
+    "logo-icon"
+);
+
+const favicon = document.getElementById(
+    "favicon"
+);
+
 
 function resetDownloads() {
     document
@@ -218,13 +226,14 @@ clearTerminalButton.addEventListener(
     }
 );
 
-
 playButton.addEventListener(
     "click",
     async () => {
         playButton.disabled = true;
-
         pauseButton.disabled = false;
+
+        logoIcon.src = "/static/assets/icon_started.svg";
+        favicon.href = "/static/assets/icon_started.svg";
 
         await fetch(
             "/start",
@@ -235,13 +244,14 @@ playButton.addEventListener(
     }
 );
 
-
 pauseButton.addEventListener(
     "click",
     async () => {
         playButton.disabled = false;
-
         pauseButton.disabled = true;
+
+        logoIcon.src = "/static/assets/icon_stopped.svg";
+        favicon.href = "/static/assets/icon_stopped.svg";
 
         await fetch(
             "/stop",

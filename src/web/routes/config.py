@@ -8,9 +8,13 @@ config = Blueprint("config", __name__)
 
 @config.route("/config", methods = ["GET"])
 def render_config():
+    from scraper import Scraper
+    scraper = Scraper()
+
     return render_template(
         "config.html",
         config = Config(),
+        is_playing = scraper.is_playing,
         domains = ["simpcity.cr"],
     )
 

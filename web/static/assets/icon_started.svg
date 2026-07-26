@@ -5,7 +5,7 @@
    viewBox="0 0 500 500"
    version="1.1"
    id="svg1"
-   sodipodi:docname="logo.svg"
+   sodipodi:docname="icon_started.svg"
    inkscape:version="1.4.4 (dcaf3e7, 2026-05-05)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
@@ -22,7 +22,7 @@
      inkscape:deskcolor="#d1d1d1"
      inkscape:zoom="2.334"
      inkscape:cx="250"
-     inkscape:cy="284.27592"
+     inkscape:cy="250"
      inkscape:window-width="2560"
      inkscape:window-height="1369"
      inkscape:window-x="-8"
@@ -38,7 +38,7 @@
       }
 
       .cls-2 {
-        font-size: 37px;
+        font-size: 33px;
         fill: #fff;
         font-family: Roomach;
       }
@@ -48,14 +48,14 @@
      class="cls-1"
      width="500"
      height="500"
-     rx="40"
-     ry="40"
+     rx="99"
+     ry="99"
      id="rect1" />
   <path
-     d="m 6.142,-20.905 8.88,7.955 q -0.333,0.629 -0.444,1.073 -0.111,0.407 -0.111,0.888 v 6.697 L 7.807,2.59 0.74,-6.401 l 3.071,-3.071 4.588,5.735 1.628,-1.702 v -3.922 q 0,-0.962 -0.185,-1.48 -0.148,-0.555 -0.518,-0.962 -0.333,-0.444 -1.295,-1.295 l -0.814,-0.74 -5.735,-5.217 v -4.144 l 9.287,-5.661 2.22,3.7 z m 15.392014,0 8.88,7.955 q -0.333,0.629 -0.444,1.073 -0.111,0.407 -0.111,0.888 v 6.697 l -6.66,6.882 -7.067,-8.991 3.071,-3.071 4.588,5.735 1.628,-1.702 v -3.922 q 0,-0.962 -0.185,-1.48 -0.148,-0.555 -0.518,-0.962 -0.333,-0.444 -1.295,-1.295 l -0.814,-0.74 -5.735,-5.217 v -4.144 l 9.287,-5.661 2.22,3.7 z"
-     id="SS"
+     d="m 15.675,-13.167 q 0,0.726 0.495,1.617 -0.495,0.891 -0.495,1.617 V 1.98 h -3.96 V -9.933 q 0,-0.726 -0.495,-1.617 0.495,-0.891 0.495,-1.617 v -1.848 l -3.3,3.993 -3.3,-3.993 v 1.848 q 0,0.726 0.495,1.617 -0.495,0.891 -0.495,1.617 V 1.98 H 1.155 V -9.933 q 0,-0.726 -0.495,-1.617 0.495,-0.891 0.495,-1.617 V -25.08 l 7.26,8.976 7.26,-8.976 z"
+     id="M"
      class="cls-2"
-     style="font-size:37px;font-family:Roomach;fill:#ffffff"
-     transform="matrix(12.611, 0, 0, 12.611, 53.98, 419.803)"
-     aria-label="SS" />
+     style="font-size:33px;font-family:Roomach;fill:#ffffff"
+     transform="matrix(22.518, 0, 0, 15.327, 60.511, 429.922)"
+     aria-label="M" />
 </svg>
