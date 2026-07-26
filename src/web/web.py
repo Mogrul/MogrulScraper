@@ -13,8 +13,8 @@ class Web(Flask, metaclass = SingletonMeta):
     def __init__(self):
         super().__init__(
             __name__,
-            template_folder = os.getcwd() + "\\web\\templates",
-            static_folder = os.getcwd() + "\\web\\static"
+            template_folder = os.getcwd() + "/web/templates",
+            static_folder = os.getcwd() + "/web/static"
         )
         self._logger = logging.getLogger("Web-Client")
         self._config = Config()
