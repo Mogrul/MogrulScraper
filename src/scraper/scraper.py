@@ -80,4 +80,7 @@ class Scraper(metaclass = SingletonMeta):
             self._send_terminal(f"{'[SCRAPER]':^15}" + message)
             return
 
-        domain(url).run()
+        domain(
+            url = url,
+            stop_event = self._stop_event,
+        ).run()

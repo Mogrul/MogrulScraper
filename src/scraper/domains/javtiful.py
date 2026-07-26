@@ -24,6 +24,9 @@ class Javtiful(Domain):
         self._porndb = PornDB()
 
     def run(self):
+        if self._stop_event.is_set():
+            return
+
         message = f"Scraping {self._url}"
         self._logger.info(message)
         self._send_terminal(f"{'[JAVTIFUL]':^15}" + message)
@@ -49,6 +52,9 @@ class Javtiful(Domain):
             if not title: return None
 
             return title.split(" ")[0]
+
+        if self._stop_event.is_set():
+            return
 
         # Visit the page
         req = Request(
@@ -132,11 +138,14 @@ class Javtiful(Domain):
         file_name_string = sanitise_filename(f"{site_name} {date} {title}"[:240]) + ".mp4"
         file_name_path = Path(file_name_string)
 
+        if self._stop_event.is_set():
+            return
+
         re = DownloadRequest(
             url = direct_url,
             destination = base_path / file_name_path
         )
-        self._session.download(re)
+        self._session.download(re, self._stop_event)
 
     def _handle_album(self):
         def get_max_page_num(soup: BeautifulSoup) -> int:
@@ -254,6 +263,13 @@ class Javtiful(Domain):
             ]
 
             for future in as_completed(futures):
+                # Cancel pending if stop event
+                if self._stop_event.is_set():
+                    for future in futures:
+                        future.cancel()
+
+                    return
+
                 try:
                     future.result()
 

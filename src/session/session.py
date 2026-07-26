@@ -1,6 +1,7 @@
 import logging
 import time
 import uuid
+from threading import Event
 
 import requests
 from bs4 import BeautifulSoup
@@ -126,7 +127,10 @@ class Session(metaclass = SingletonMeta):
                         text = r.text,
                     )
 
-    def download(self, request: DownloadRequest):
+    def download(self, request: DownloadRequest, stop_event: Event):
+        if stop_event.is_set():
+            return
+
         headers = request.headers
         destination = request.destination
 
@@ -165,8 +169,15 @@ class Session(metaclass = SingletonMeta):
             download = Download(id, destination.name, download_percent)
             self._add_download(download)
 
+            self._logger.info(
+                f"{format_bytes(total_bytes):^10} Downloading: {destination}"
+            )
+
             with open(temp_path, mode) as f:
                 for chunk in r.iter_content(chunk_size = self._config.chunk_size):
+                    if stop_event.is_set():
+                        break
+
                     if chunk:
                         f.write(chunk)
 
@@ -176,6 +187,9 @@ class Session(metaclass = SingletonMeta):
 
         # Handle download completion
         self._remove_download(download)
+        if stop_event.is_set():
+            return
+
         temp_path.rename(destination)
 
         time_taken = time.perf_counter() - start_time
