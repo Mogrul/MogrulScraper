@@ -72,6 +72,9 @@ class Scraper(metaclass = SingletonMeta):
 
     def _pass_to_domain(self, url: str):
         domain_name = urlparse(url).netloc
+        if domain_name in self._config.disabled_domains:
+            return
+
         domain = DOMAINS.get(domain_name)
 
         if not domain:

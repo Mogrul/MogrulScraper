@@ -17,6 +17,7 @@ class Config(metaclass = SingletonMeta):
         self.timeout: int = _args.timeout
         self.porndb_token: str | None = _args.porndb_token
         self.download_path = Path(_args.download_path)
+        self.disabled_domains: list[str] = _args.disabled_domains
 
     def _parse_args(self) -> argparse.Namespace:
         parser = argparse.ArgumentParser()
@@ -25,7 +26,16 @@ class Config(metaclass = SingletonMeta):
             "urls",
             nargs = "*",
             metavar = "URL",
+            default = [],
             help = "URLs to scrape",
+        )
+
+        parser.add_argument(
+            "--disabled-domains",
+            nargs = "*",
+            metavar = "DOMAIN",
+            default = [],
+            help = "Domain to disable",
         )
 
         parser.add_argument(

@@ -9,13 +9,14 @@ config = Blueprint("config", __name__)
 @config.route("/config", methods = ["GET"])
 def render_config():
     from scraper import Scraper
+    from scraper.domains import DOMAINS
     scraper = Scraper()
 
     return render_template(
         "config.html",
         config = Config(),
         is_playing = scraper.is_playing,
-        domains = ["simpcity.cr"],
+        domains = DOMAINS.keys(),
     )
 
 @config.route("/config", methods = ["POST"])
@@ -51,8 +52,10 @@ def receive_config():
         "success",
     )
 
+    from scraper.domains import DOMAINS
+
     return render_template(
         "config.html",
         config = config_data,
-        domains = ["simpcity.cr"]
+        domains = DOMAINS.keys(),
     )
