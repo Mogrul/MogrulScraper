@@ -49,6 +49,8 @@ class Scraper(metaclass = SingletonMeta):
             message = "No urls provided."
             self._logger.info(message)
             self._send_terminal(f"{'[SCRAPER]':^15}" + message)
+            self.stop()
+            return
 
         else:
             message = f"Scraping {len(urls)} urls."
@@ -91,4 +93,5 @@ class Scraper(metaclass = SingletonMeta):
         domain(
             url = url,
             stop_event = self._stop_event,
+            domain_name = domain_name,
         ).run()

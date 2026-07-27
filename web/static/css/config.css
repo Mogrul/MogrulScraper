@@ -122,6 +122,7 @@ textarea.form-input {
     padding-top: 24px;
 
     border-top: 1px solid var(--border);
+    grid-column: 1 / -1;
 }
 
 .save-button {

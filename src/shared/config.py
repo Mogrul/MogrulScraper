@@ -1,4 +1,5 @@
 import argparse
+import json
 from pathlib import Path
 
 from .singleton import SingletonMeta
@@ -18,6 +19,22 @@ class Config(metaclass = SingletonMeta):
         self.porndb_token: str | None = _args.porndb_token
         self.download_path = Path(_args.download_path)
         self.disabled_domains: list[str] = _args.disabled_domains
+
+        # Attempt to load json configs
+        _json = self._load_json()
+        self.domain_paths = _json.get("domain.paths", {})
+
+    def _load_json(self) -> dict:
+        path = Path("config.json")
+
+        if not path.exists():
+            return {}
+
+        try:
+            return json.load(path.open())
+
+        except json.decoder.JSONDecodeError:
+            return {}
 
     def _parse_args(self) -> argparse.Namespace:
         parser = argparse.ArgumentParser()
