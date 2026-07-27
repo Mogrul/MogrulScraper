@@ -40,7 +40,7 @@ class Javtiful(Domain):
         ):
             self._handle_album()
 
-    def _handle_video(self, url: str, album_name: str | None = None) -> None:
+    def _handle_video(self, url: str) -> None:
         def get_code(soup: BeautifulSoup) -> str | None:
             title = soup.find("div", {"class": "front-watch-title mt-3"})
             if not title: return None
@@ -133,9 +133,6 @@ class Javtiful(Domain):
         else:
             base_path = self._config.download_path / self._site_name.capitalize() / category.value.capitalize()
 
-        if album_name:
-            base_path = base_path / album_name.capitalize()
-
         if code not in title:
             title = f"{code.upper()} {title}"
 
@@ -193,15 +190,6 @@ class Javtiful(Domain):
 
             return page_urls
 
-        def get_name(soup: BeautifulSoup) -> str | None:
-            div = soup.find("div", {"class": "front-actress-detail-head"})
-            if not div: return None
-
-            h2 = div.find("h2")
-            if not h2: return None
-
-            return str(h2.get_text())
-
         # Visit last page to get max page number
         req = Request(
             url = self._url,
@@ -215,12 +203,6 @@ class Javtiful(Domain):
 
         if not res.soup:
             self._logger.error(f"{res.status_code}: {self._url}?page=999")
-            return
-
-        name = get_name(res.soup)
-
-        if not name:
-            self._logger.error(f"[NAME FAIL]: {self._url}?page=999")
             return
 
         # Retrieve all page urls using a thread pool
