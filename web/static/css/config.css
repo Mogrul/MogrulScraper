@@ -20,6 +20,14 @@
     color: var(--muted-text);
 }
 
+.config-grid {
+    display: grid;
+
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 24px;
+}
+
 .config-card {
     padding: 32px;
 
@@ -33,11 +41,15 @@
 }
 
 .form-group {
-    margin-bottom: 24px;
+    margin-bottom: 0;
 }
 
 .form-group:last-of-type {
     margin-bottom: 0;
+}
+
+.form-group.full-width {
+    grid-column: 1 / -1;
 }
 
 .form-label {
@@ -52,11 +64,14 @@
 }
 
 .form-description {
+    min-height: 36px;
+
     margin: -4px 0 10px;
 
     color: var(--muted-text);
 
     font-size: 13px;
+    line-height: 18px;
 }
 
 .form-input {
@@ -193,6 +208,10 @@ textarea.form-input {
 }
 
 @media (max-width: 600px) {
+    .config-grid {
+        grid-template-columns: 1fr;
+    }
+
     .config-card {
         padding: 24px;
     }

@@ -15,117 +15,160 @@
     </div>
 
     <form class="config-card" method="POST" action="/config">
-        <div class="form-group">
-            <label class="form-label" for="urls">
-                URLs
-            </label>
 
-            <p class="form-description">
-                Enter one URL per line to scrape.
-            </p>
+        <div class="config-grid">
 
-            <textarea
-                id="urls"
-                name="urls"
-                class="form-input"
-                placeholder="https://simpcity.cr/threads/insanebirkin.1761775&#10;https://javtiful.com/actress/yayoi-mizuki"
-            >{{ '\n'.join(config.urls) }}</textarea>
-        </div>
+            <div class="form-group full-width">
+                <label class="form-label" for="urls">
+                    URLs
+                </label>
 
-        <div class="form-group">
-            <label class="form-label">
-                Disable Domains
-            </label>
+                <p class="form-description">
+                    Enter one URL per line to scrape.
+                </p>
 
-            <p class="form-description">
-                Disable domains that might get scraped in threads.
-            </p>
-
-            <div class="checkbox-list">
-                {% for domain in domains %}
-                    <label class="checkbox-control">
-                        <input
-                            id="domain-{{ loop.index }}"
-                            type="checkbox"
-                            name="disabled_domains"
-                            value="{{ domain }}"
-                            {% if domain in config.disabled_domains %}
-                                checked
-                            {% endif %}
-                        >
-
-                        <span class="checkbox-text">
-                            {{ domain }}
-                        </span>
-                    </label>
-                {% endfor %}
+                <textarea
+                    id="urls"
+                    name="urls"
+                    class="form-input"
+                    placeholder="https://simpcity.cr/threads/insanebirkin.1761775&#10;https://javtiful.com/actress/yayoi-mizuki"
+                >{{ '\n'.join(config.urls) }}</textarea>
             </div>
-        </div>
 
-        <div class="form-group">
-            <label class="form-label" for="chunk-size">
-                Chunk Size
-            </label>
+            <div class="form-group">
+                <label class="form-label">
+                    Disable Domains
+                </label>
 
-            <p class="form-description">
-                The amount of data downloaded at a time, in bytes.
-            </p>
+                <p class="form-description">
+                    Disable domains that might get scraped in threads.
+                </p>
 
-            <input
-                id="chunk-size"
-                name="chunk_size"
-                class="form-input"
-                type="number"
-                min="1"
-                value="{{ config.chunk_size }}"
-            >
-        </div>
+                <div class="checkbox-list">
+                    {% for domain in domains %}
+                        <label class="checkbox-control">
+                            <input
+                                id="domain-{{ loop.index }}"
+                                type="checkbox"
+                                name="disabled_domains"
+                                value="{{ domain }}"
+                                {% if domain in config.disabled_domains %}
+                                    checked
+                                {% endif %}
+                            >
 
-        <div class="form-group">
-            <label class="form-label" for="concurrent">
-                Concurrent Downloads
-            </label>
+                            <span class="checkbox-text">
+                                {{ domain }}
+                            </span>
+                        </label>
+                    {% endfor %}
+                </div>
+            </div>
 
-            <p class="form-description">
-                The maximum number of downloads running simultaneously.
-            </p>
+            <div class="form-group">
+                <label class="form-label" for="chunk-size">
+                    Chunk Size
+                </label>
 
-            <input
-                id="concurrent"
-                name="concurrent"
-                class="form-input"
-                type="number"
-                min="1"
-                value="{{ config.concurrent }}"
-            >
-        </div>
+                <p class="form-description">
+                    The amount of data downloaded at a time, in bytes.
+                </p>
 
-        <div class="form-group">
-            <label class="form-label" for="timeout">
-                Request Timeout
-            </label>
+                <input
+                    id="chunk-size"
+                    name="chunk_size"
+                    class="form-input"
+                    type="number"
+                    min="1"
+                    value="{{ config.chunk_size }}"
+                >
+            </div>
 
-            <p class="form-description">
-                Maximum time to wait for a request, in seconds.
-            </p>
+            <div class="form-group">
+                <label class="form-label" for="concurrent">
+                    Concurrent Downloads
+                </label>
 
-            <input
-                id="timeout"
-                name="timeout"
-                class="form-input"
-                type="number"
-                min="1"
-                value="{{ config.timeout }}"
-            >
-        </div>
+                <p class="form-description">
+                    The maximum number of downloads running simultaneously.
+                </p>
 
-        <div class="form-footer">
-            <button
-                type="submit"
-                class="save-button"
-            >
-                Save Configuration
-            </button>
+                <input
+                    id="concurrent"
+                    name="concurrent"
+                    class="form-input"
+                    type="number"
+                    min="1"
+                    value="{{ config.concurrent }}"
+                >
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="timeout">
+                    Request Timeout
+                </label>
+
+                <p class="form-description">
+                    Maximum time to wait for a request, in seconds.
+                </p>
+
+                <input
+                    id="timeout"
+                    name="timeout"
+                    class="form-input"
+                    type="number"
+                    min="1"
+                    value="{{ config.timeout }}"
+                >
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="porndb-token">
+                    PornDB Token
+                </label>
+
+                <p class="form-description">
+                    Token used to authenticate requests to PornDB.
+                </p>
+
+                <input
+                    id="porndb-token"
+                    name="porndb_token"
+                    class="form-input"
+                    type="password"
+                    value="{{ config.porndb_token or '' }}"
+                    placeholder="Enter your PornDB token"
+                >
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="download-path">
+                    Download Path
+                </label>
+
+                <p class="form-description">
+                    Directory where downloaded files will be saved.
+                </p>
+
+                <input
+                    id="download-path"
+                    name="download_path"
+                    class="form-input"
+                    type="text"
+                    value="{{ config.download_path }}"
+                    placeholder="Downloads"
+                >
+            </div>
+
+            <div class="form-footer">
+                <button
+                    type="submit"
+                    class="save-button"
+                >
+                    Save Configuration
+                </button>
+            </div>
+
         </div>
 
     </form>
