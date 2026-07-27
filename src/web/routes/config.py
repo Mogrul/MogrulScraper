@@ -1,4 +1,5 @@
 import logging
+from pathlib import Path
 
 from flask import Blueprint, request, request, flash, render_template
 
@@ -28,6 +29,8 @@ def receive_config():
     disabled_domains = request.form.getlist("disabled_domains")
     concurrent = request.form.get("concurrent", type = int)
     timeout = request.form.get("timeout", type = int)
+    porndb_token = request.form.get("porndb_token", type = str)
+    download_path = request.form.get("download_path", type = str)
 
     config_data = Config()
     if isinstance(urls, str):
@@ -44,6 +47,12 @@ def receive_config():
 
     if timeout:
         config_data.timeout = timeout
+
+    if porndb_token:
+        config_data.porndb_token = porndb_token
+
+    if download_path:
+        config_data.download_path = Path(download_path)
 
     logger.info(f"Config Changed to: {config_data.__dict__}")
 
