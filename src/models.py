@@ -1,5 +1,6 @@
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import ClassVar
 
 from bs4 import BeautifulSoup
 
@@ -45,6 +46,10 @@ class EventDownload:
 class EventTerminal:
     message: str
     type: str = "terminal"
+
+@dataclass(frozen = True)
+class EventStop:
+    type: str = "stop"
 
 @dataclass
 class Download:

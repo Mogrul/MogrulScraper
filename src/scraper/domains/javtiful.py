@@ -128,7 +128,7 @@ class Javtiful(Domain):
             return None
 
         # Create the path for the file
-        base_path = self._config.download_path / self._site_name / category.value.capitalize()
+        base_path = self._config.download_path / self._site_name.capitalize() / category.value.capitalize()
         if album_name:
             base_path = base_path / album_name.capitalize()
 

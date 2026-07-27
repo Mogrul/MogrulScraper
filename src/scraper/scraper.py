@@ -18,8 +18,9 @@ class Scraper(metaclass = SingletonMeta):
 
         self._thread: threading.Thread | None = None
 
-        from web.routes import send_terminal
+        from web.routes import send_terminal, send_stop
         self._send_terminal = send_terminal
+        self._send_stop = send_stop
 
     @property
     def is_playing(self) -> bool:
@@ -35,6 +36,7 @@ class Scraper(metaclass = SingletonMeta):
         self._thread.start()
 
     def stop(self):
+        self._send_stop()
         self._logger.info("Stopping...")
         self._stop_event.set()
 

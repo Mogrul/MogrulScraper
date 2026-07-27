@@ -7,7 +7,7 @@ from enum import Enum
 
 from flask import Blueprint, Response
 
-from models import EventDownload, EventTerminal
+from models import EventTerminal, EventStop, EventDownload
 from shared import Config
 
 clients = []
@@ -18,7 +18,7 @@ terminal_events_lock = threading.Lock()
 
 dashboard = Blueprint("dashboard", __name__)
 
-def event_to_dict(event: EventDownload | EventTerminal) -> dict:
+def event_to_dict(event: EventStop | EventTerminal | EventDownload) -> dict:
     event_dict = asdict(event)
 
     if isinstance(event_dict.get("type"), Enum):
@@ -26,7 +26,7 @@ def event_to_dict(event: EventDownload | EventTerminal) -> dict:
 
     return event_dict
 
-def send_client(event: EventDownload | EventTerminal):
+def send_client(event: EventStop | EventTerminal | EventDownload):
     event_dict = event_to_dict(event)
 
     if event.type == "terminal":
@@ -36,6 +36,9 @@ def send_client(event: EventDownload | EventTerminal):
     with clients_lock:
         current_clients = list(clients)
 
+    logger = logging.getLogger("Web-Client.Sending")
+    logger.debug(f"Sending event {event_dict}")
+
     for client in current_clients:
         client.put(event_dict)
 
@@ -44,6 +47,13 @@ def send_terminal(message: str):
 
     if config.web_client:
         event = EventTerminal(message)
+        send_client(event)
+
+def send_stop():
+    config = Config()
+
+    if config.web_client:
+        event = EventStop()
         send_client(event)
 
 def handle_initial() -> list[dict]:
@@ -105,11 +115,11 @@ def pause():
     logger.info(f"Event received")
 
     if not scraper.is_playing:
-        send_client(EventTerminal("Scraper already stopped."))
+        send_terminal("Scraper already stopped.")
 
     else:
         scraper.stop()
-        send_client(EventTerminal("Scraper stopping."))
+        send_terminal("Scraper stopping.")
 
     return "", 204
 
@@ -122,10 +132,10 @@ def start():
     logger.info(f"Event received")
 
     if scraper.is_playing:
-        send_client(EventTerminal("Scraper already started."))
+        send_terminal("Scraper already started.")
 
     else:
-        send_client(EventTerminal("Scraper started."))
+        send_terminal("Scraper started.")
         try:
             scraper.start()
         except Exception as e:

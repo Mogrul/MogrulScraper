@@ -7,6 +7,8 @@ events.onmessage = (event) => {
         event.data
     );
 
+    console.log(`Received ${data}`);
+
     switch (data.type) {
         case "download_add":
             addDownload(
@@ -37,6 +39,10 @@ events.onmessage = (event) => {
                 data.message
             );
 
+            break;
+
+        case "stop":
+            stop();
             break;
 
         default:
@@ -218,6 +224,13 @@ function addTerminalMessage(
         terminal.scrollHeight;
 }
 
+function stop() {
+    playButton.disabled = false;
+    pauseButton.disabled = true;
+
+    logoIcon.src = "/static/assets/icon_stopped.svg";
+    favicon.href = "/static/assets/icon_stopped.svg";
+}
 
 clearTerminalButton.addEventListener(
     "click",
@@ -247,11 +260,7 @@ playButton.addEventListener(
 pauseButton.addEventListener(
     "click",
     async () => {
-        playButton.disabled = false;
-        pauseButton.disabled = true;
-
-        logoIcon.src = "/static/assets/icon_stopped.svg";
-        favicon.href = "/static/assets/icon_stopped.svg";
+        stop();
 
         await fetch(
             "/stop",

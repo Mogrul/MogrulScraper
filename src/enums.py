@@ -16,12 +16,12 @@ class RequestType(Enum):
     GET = 1
     POST = 2
 
-class EventDownloadType(Enum):
+class EventDownloadType(str, Enum):
     ADD = "download_add"
     PROGRESS = "download_progress"
     COMPLETE = "download_complete"
 
-class PornDBCategory(Enum):
+class PornDBCategory(str, Enum):
     JAV = "jav"
     MOVIES = "movies"
     SCENES = "scenes"
