@@ -21,28 +21,48 @@
     <!-- Controls -->
     <div class="dashboard-controls">
 
-        <button
-            id="play-button"
-            class="control-button play-button"
-            type="button"
-            disabled
-        >
-            ▶
-            <span>Start</span>
-        </button>
+        <div class="control-buttons">
+            <button
+                id="play-button"
+                class="control-button play-button"
+                type="button"
+                disabled
+            >
+                ▶
+                <span>Start</span>
+            </button>
 
-        <button
-            id="pause-button"
-            class="control-button pause-button"
-            type="button"
-            disabled
-        >
-            ⏸
-            <span>Stop</span>
-        </button>
+            <button
+                id="pause-button"
+                class="control-button pause-button"
+                type="button"
+                disabled
+            >
+                ⏸
+                <span>Stop</span>
+            </button>
+        </div>
+
+
+        <div class="dashboard-stats">
+
+            <div class="stat-item">
+                <span class="stat-label">Downloaded</span>
+                <span class="stat-value" id="total-download-size">
+                    {{ total_download_size | default("0 B") }}
+                </span>
+            </div>
+
+            <div class="stat-item">
+                <span class="stat-label">Items</span>
+                <span class="stat-value" id="items-downloaded">
+                    {{ items_downloaded | default(0) }}
+                </span>
+            </div>
+
+        </div>
 
     </div>
-
 
     <!-- Downloads -->
     <section class="dashboard-section">

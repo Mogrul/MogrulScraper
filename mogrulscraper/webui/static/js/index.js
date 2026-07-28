@@ -112,6 +112,8 @@ function resetDownloads() {
         .forEach(download => {
             download.remove();
         });
+
+    updateDownloadCount();
 }
 
 function updateDownloadCount() {
@@ -234,6 +236,8 @@ function stopped() {
 
     logoIcon.src = ICONS.stopped;
     favicon.href = ICONS.stopped;
+
+    resetDownloads();
 }
 
 function started() {

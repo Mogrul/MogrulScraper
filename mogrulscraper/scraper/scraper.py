@@ -1,8 +1,9 @@
 import logging
 import threading
 import time
+from uuid import uuid3, uuid4
 
-from mogrulscraper.events import event_manager, StatusEvent, EventType, TerminalEvent
+from mogrulscraper.events import event_manager, StatusEvent, EventType, TerminalEvent, DownloadEvent
 
 
 class Scraper:
@@ -54,7 +55,16 @@ class Scraper:
         )
 
         while self._running:
-            time.sleep(0.1)
+            time.sleep(1)
+            self._events.send(
+                DownloadEvent(
+                    id = str(uuid4()),
+                    name = str(uuid4()),
+                    progress = 10,
+                    type = EventType.DOWNLOAD_ADD
+                )
+            )
+
             pass
 
         self._events.send(
