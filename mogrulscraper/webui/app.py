@@ -4,8 +4,9 @@ from pathlib import Path
 
 from flask import Flask
 
-from mogrulscraper.webui.routes import pages, dashboard
+from mogrulscraper.webui.routes import pages, dashboard, api
 from mogrulscraper.scraper import Scraper
+from mogrulscraper.core import Settings, get_secret_key
 
 class App(Flask):
     def __init__(
@@ -22,11 +23,15 @@ class App(Flask):
 
         self._thread = None
         self._logger = logging.getLogger("WebApp")
+        self._settings = Settings()
 
         self.extensions["scraper"] = scraper
+        self.extensions["settings"] = self._settings
+        self.config["SECRET_KEY"] = get_secret_key("flask_secret_key")
 
         self.register_blueprint(pages)
         self.register_blueprint(dashboard)
+        self.register_blueprint(api)
 
     def run_thread(self):
         if (
@@ -46,8 +51,8 @@ class App(Flask):
             "Running on http://127.0.0.1:8080/",
         )
         self.run(
-            host="127.0.0.1",
-            port=8080,
-            debug=False,
-            use_reloader=False,
+            host = "127.0.0.1",
+            port = 8080,
+            debug = True,
+            use_reloader = False,
         )

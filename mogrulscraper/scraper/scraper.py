@@ -1,10 +1,14 @@
 import logging
 import threading
-import time
-from uuid import uuid3, uuid4
+from collections import defaultdict
+from urllib.parse import urlparse
 
-from mogrulscraper.events import event_manager, StatusEvent, EventType, TerminalEvent, DownloadEvent
-
+from mogrulscraper.events import (
+    event_manager, StatusEvent,
+    EventType, TerminalEvent
+)
+from mogrulscraper.core import Settings
+from mogrulscraper.hosts import HOSTS
 
 class Scraper:
     def __init__(self):
@@ -12,6 +16,7 @@ class Scraper:
         self._running = False
         self._logger = logging.getLogger("Scraper")
         self._events = event_manager
+        self._settings = Settings()
 
     @property
     def is_running(self) -> bool:
@@ -44,6 +49,31 @@ class Scraper:
         return True
 
     def run_main(self):
+        if not self._settings.urls:
+            self._events.send(
+                TerminalEvent(
+                    "No URLs provided"
+                )
+            )
+            self._events.send(
+                StatusEvent(type=EventType.STATUS_STOPPED)
+            )
+            self._running = False
+            return
+
+        self._on_started()
+        host_groups: dict[str, list[str]] = defaultdict(list)
+
+        for url in self._settings.urls:
+            parsed = urlparse(url)
+            host_groups[parsed.netloc].append(parsed.path)
+
+        for host, group in host_groups.items():
+            self._parse_groups(host, group)
+
+        self._on_stopped()
+
+    def _on_started(self):
         self._events.send(
             TerminalEvent("Started Scraper")
         )
@@ -54,19 +84,7 @@ class Scraper:
             "Started Scraper"
         )
 
-        while self._running:
-            time.sleep(1)
-            self._events.send(
-                DownloadEvent(
-                    id = str(uuid4()),
-                    name = str(uuid4()),
-                    progress = 10,
-                    type = EventType.DOWNLOAD_ADD
-                )
-            )
-
-            pass
-
+    def _on_stopped(self):
         self._events.send(
             TerminalEvent("Stopped Scraper")
         )
@@ -76,3 +94,15 @@ class Scraper:
         self._logger.info(
             "Stopped Scraper"
         )
+        self._running = False
+
+    def _parse_groups(self, host: str, group: list[str]):
+        if host not in HOSTS:
+            self._logger.warning(f"Host {host} is unsupported")
+            self._events.send(
+                TerminalEvent(f"Host {host} is unsupported")
+            )
+            return
+
+        cls = HOSTS[host](group, host)
+        cls.start()

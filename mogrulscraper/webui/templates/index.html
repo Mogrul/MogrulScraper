@@ -49,14 +49,14 @@
             <div class="stat-item">
                 <span class="stat-label">Downloaded</span>
                 <span class="stat-value" id="total-download-size">
-                    {{ total_download_size | default("0 B") }}
+                    {{ downloaded_bytes | default("0 B") }}
                 </span>
             </div>
 
             <div class="stat-item">
                 <span class="stat-label">Items</span>
                 <span class="stat-value" id="items-downloaded">
-                    {{ items_downloaded | default(0) }}
+                    {{ downloaded_total | default(0) }}
                 </span>
             </div>
 

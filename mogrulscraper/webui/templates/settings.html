@@ -1,0 +1,192 @@
+{% extends "template.html" %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/settings.css') }}">
+
+<div class="config-page">
+
+    <div class="config-header">
+        <h1>Configuration</h1>
+
+        <p>
+            Configure how the scraper handles downloads and requests.
+        </p>
+    </div>
+
+    <form class="config-card" method="POST" action="/settings">
+
+        <div class="config-grid">
+
+            <div class="form-group full-width">
+                <div class="form-header-row">
+                    <div>
+                        <label class="form-label" for="urls">
+                            URLs
+                        </label>
+
+                        <p class="form-description">
+                            Enter one URL per line to scrape.
+                        </p>
+                    </div>
+
+                    <button
+                        type="button"
+                        class="load-history-button"
+                        id="load-history-button"
+                    >
+                        Load history
+                    </button>
+                </div>
+
+                <textarea
+                    id="urls"
+                    name="urls"
+                    class="form-input"
+                    placeholder="https://simpcity.cr/threads/insanebirkin.1761775&#10;https://javtiful.com/actress/yayoi-mizuki"
+                >{{ '\n'.join(settings.urls) }}</textarea>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">
+                    Exclude Hosts
+                </label>
+
+                <p class="form-description">
+                    Exclude hosts that might get scraped in threads.
+                </p>
+
+                <div class="checkbox-list">
+                    {% for host in hosts %}
+                        <label class="checkbox-control">
+                            <input
+                                id="domain-{{ loop.index }}"
+                                type="checkbox"
+                                name="excluded_domains"
+                                value="{{ host }}"
+                                {% if domain in config.excluded_domains %}
+                                    checked
+                                {% endif %}
+                            >
+
+                            <span class="checkbox-text">
+                                {{ host }}
+                            </span>
+                        </label>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="chunk-size">
+                    Chunk Size
+                </label>
+
+                <p class="form-description">
+                    The amount of data downloaded at a time, in bytes.
+                </p>
+
+                <input
+                    id="chunk-size"
+                    name="chunk_size"
+                    class="form-input"
+                    type="number"
+                    min="1"
+                    value="{{ settings.chunk_size }}"
+                >
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="concurrent">
+                    Concurrent Downloads
+                </label>
+
+                <p class="form-description">
+                    The maximum number of downloads running simultaneously.
+                </p>
+
+                <input
+                    id="concurrent"
+                    name="concurrent"
+                    class="form-input"
+                    type="number"
+                    min="1"
+                    value="{{ settings.concurrent_downloads }}"
+                >
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="timeout">
+                    Request Timeout
+                </label>
+
+                <p class="form-description">
+                    Maximum time to wait for a request, in seconds.
+                </p>
+
+                <input
+                    id="timeout"
+                    name="timeout"
+                    class="form-input"
+                    type="number"
+                    min="1"
+                    value="{{ config.timeout }}"
+                >
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="porndb-token">
+                    PornDB Token
+                </label>
+
+                <p class="form-description">
+                    Token used to authenticate requests to PornDB.
+                </p>
+
+                <input
+                    id="porndb-token"
+                    name="porndb_token"
+                    class="form-input"
+                    type="password"
+                    value="{{ config.porndb_token or '' }}"
+                    placeholder="Enter your PornDB token"
+                >
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="download-path">
+                    Download Path
+                </label>
+
+                <p class="form-description">
+                    Directory where downloaded files will be saved.
+                </p>
+
+                <input
+                    id="download-path"
+                    name="download_path"
+                    class="form-input"
+                    type="text"
+                    value="{{ config.download_path }}"
+                    placeholder="Downloads"
+                >
+            </div>
+
+            <div class="form-footer">
+                <button
+                    type="submit"
+                    class="save-button"
+                >
+                    Save Configuration
+                </button>
+            </div>
+
+        </div>
+
+    </form>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/settings.js') }}"></script>
+
+{% endblock %}
