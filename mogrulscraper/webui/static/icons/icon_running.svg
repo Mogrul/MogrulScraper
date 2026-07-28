@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="500"
+   height="500"
+   viewBox="0 0 500 500"
+   version="1.1"
+   id="svg1"
+   sodipodi:docname="icon_started.svg"
+   inkscape:version="1.4.4 (dcaf3e7, 2026-05-05)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="2.334"
+     inkscape:cx="250"
+     inkscape:cy="250"
+     inkscape:window-width="2560"
+     inkscape:window-height="1369"
+     inkscape:window-x="-8"
+     inkscape:window-y="1072"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg1" />
+  <defs
+     id="defs1">
+    <style
+       id="style1">
+      .cls-1 {
+        fill: #6366f1;
+      }
+
+      .cls-2 {
+        font-size: 33px;
+        fill: #fff;
+        font-family: Roomach;
+      }
+    </style>
+  </defs>
+  <rect
+     class="cls-1"
+     width="500"
+     height="500"
+     rx="99"
+     ry="99"
+     id="rect1" />
+  <path
+     d="m 15.675,-13.167 q 0,0.726 0.495,1.617 -0.495,0.891 -0.495,1.617 V 1.98 h -3.96 V -9.933 q 0,-0.726 -0.495,-1.617 0.495,-0.891 0.495,-1.617 v -1.848 l -3.3,3.993 -3.3,-3.993 v 1.848 q 0,0.726 0.495,1.617 -0.495,0.891 -0.495,1.617 V 1.98 H 1.155 V -9.933 q 0,-0.726 -0.495,-1.617 0.495,-0.891 0.495,-1.617 V -25.08 l 7.26,8.976 7.26,-8.976 z"
+     id="M"
+     class="cls-2"
+     style="font-size:33px;font-family:Roomach;fill:#ffffff"
+     transform="matrix(22.518, 0, 0, 15.327, 60.511, 429.922)"
+     aria-label="M" />
+</svg>

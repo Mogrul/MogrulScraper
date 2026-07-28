@@ -1,0 +1,125 @@
+{% extends "template.html" %}
+
+{% block content %}
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/index.css') }}"
+>
+
+<div class="dashboard-page">
+
+    <div class="dashboard-header">
+        <h1>Dashboard</h1>
+
+        <p>
+            Monitor and control your scraper.
+        </p>
+    </div>
+
+
+    <!-- Controls -->
+    <div class="dashboard-controls">
+
+        <button
+            id="play-button"
+            class="control-button play-button"
+            type="button"
+            disabled
+        >
+            ▶
+            <span>Start</span>
+        </button>
+
+        <button
+            id="pause-button"
+            class="control-button pause-button"
+            type="button"
+            disabled
+        >
+            ⏸
+            <span>Stop</span>
+        </button>
+
+    </div>
+
+
+    <!-- Downloads -->
+    <section class="dashboard-section">
+
+        <div class="section-header">
+            <div>
+                <h2>Downloads</h2>
+
+                <p>
+                    Currently active downloads.
+                </p>
+            </div>
+
+            <span
+                id="download-count"
+                class="section-count"
+            >
+                0
+            </span>
+        </div>
+
+
+        <div
+            id="downloads"
+            class="downloads-container"
+        >
+            <div
+                id="empty-downloads"
+                class="empty-state"
+            >
+                No active downloads.
+            </div>
+        </div>
+
+    </section>
+
+
+    <!-- Terminal -->
+    <section class="dashboard-section">
+
+        <div class="section-header">
+            <div>
+                <h2>Terminal</h2>
+
+                <p>
+                    Live scraper output.
+                </p>
+            </div>
+
+            <button
+                id="clear-terminal"
+                class="clear-button"
+                type="button"
+            >
+                Clear
+            </button>
+        </div>
+
+
+        <div
+            id="terminal"
+            class="terminal"
+        ></div>
+
+    </section>
+
+</div>
+
+<script>
+    const ICONS = {
+        stopped: "{{ url_for('static', filename='icons/icon_stopped.svg') }}",
+        running: "{{ url_for('static', filename='icons/icon_running.svg') }}",
+    }
+</script>
+
+<script
+    src="{{ url_for('static', filename='js/index.js') }}"
+></script>
+
+{% endblock %}
